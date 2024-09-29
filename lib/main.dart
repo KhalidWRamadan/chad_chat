@@ -1,4 +1,5 @@
 import 'package:chad_chat/views/login_view.dart';
+import 'package:chad_chat/views/sign_up_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,9 +11,13 @@ class ChadChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginView(),
+      routes: {
+        'LoginView': (context) => const LoginView(),
+        'SignUpView': (context) => const SignUpView(),
+      },
+      initialRoute: 'LoginView',
     );
   }
 }

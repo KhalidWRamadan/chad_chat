@@ -1,14 +1,13 @@
 import 'package:chad_chat/components/custom_button.dart';
-import 'package:chad_chat/components/custom_text_Field.dart';
-import 'package:flutter/material.dart';
+import 'package:chad_chat/components/custom_text_field.dart';
 import 'package:chad_chat/constants/colors.dart';
+import 'package:flutter/material.dart';
 
-class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+class SignUpView extends StatelessWidget {
+  const SignUpView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get the device's width and height using MediaQuery
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -55,8 +54,13 @@ class LoginView extends StatelessWidget {
                       screenHeight * 0.03), // Space between email and password
               const CustomTextField(label: 'Enter Your Password'),
               SizedBox(
+                  height:
+                      screenHeight * 0.03), // Space between email and password
+              const CustomTextField(label: 'Confirm Your Password'),
+
+              SizedBox(
                   height: screenHeight * 0.04), // Space before sign-in button
-              const CustomButton(label: 'Sign In'),
+              const CustomButton(label: 'Sign Up'),
               SizedBox(
                   height: screenHeight *
                       0.03), // Space before the "Don't have an account?" text
@@ -64,7 +68,7 @@ class LoginView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Don\'t have an account? ',
+                    'Already have an account? ',
                     style: TextStyle(
                       color: AppColors.mainText,
                       fontSize: screenWidth * 0.045, // Dynamic font size
@@ -72,10 +76,10 @@ class LoginView extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, 'SignUpView');
+                      Navigator.of(context).pop();
                     },
                     child: Text(
-                      'Sign Up',
+                      'Login',
                       style: TextStyle(
                         color: AppColors.yellow,
                         fontSize: screenWidth * 0.045, // Dynamic font size
