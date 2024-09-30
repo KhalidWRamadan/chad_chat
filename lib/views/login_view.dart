@@ -1,11 +1,12 @@
 import 'package:chad_chat/components/custom_button.dart';
 import 'package:chad_chat/components/custom_text_Field.dart';
+import 'package:chad_chat/views/sign_up_view.dart';
 import 'package:flutter/material.dart';
 import 'package:chad_chat/constants/colors.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
-
+  static String id = 'LoginView';
   @override
   Widget build(BuildContext context) {
     // Get the device's width and height using MediaQuery
@@ -13,7 +14,7 @@ class LoginView extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: AppColors.mainColor,
+      backgroundColor: mainColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -43,7 +44,7 @@ class LoginView extends StatelessWidget {
                   fontStyle: FontStyle.italic,
                   fontSize:
                       screenWidth * 0.08, // Font size relative to screen width
-                  color: AppColors.mainText,
+                  color: mainText,
                 ),
               ),
               SizedBox(
@@ -66,18 +67,18 @@ class LoginView extends StatelessWidget {
                   Text(
                     'Don\'t have an account? ',
                     style: TextStyle(
-                      color: AppColors.mainText,
+                      color: mainText,
                       fontSize: screenWidth * 0.045, // Dynamic font size
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, 'SignUpView');
+                      Navigator.pushNamed(context, SignUpView.id);
                     },
                     child: Text(
                       'Sign Up',
                       style: TextStyle(
-                        color: AppColors.yellow,
+                        color: yellow,
                         fontSize: screenWidth * 0.045, // Dynamic font size
                       ),
                     ),

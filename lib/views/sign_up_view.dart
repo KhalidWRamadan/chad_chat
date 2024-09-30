@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 
 class SignUpView extends StatelessWidget {
   const SignUpView({super.key});
-
+  static String id = 'SignUpView';
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: AppColors.mainColor,
+      backgroundColor: mainColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -42,7 +42,7 @@ class SignUpView extends StatelessWidget {
                   fontStyle: FontStyle.italic,
                   fontSize:
                       screenWidth * 0.08, // Font size relative to screen width
-                  color: AppColors.mainText,
+                  color: mainText,
                 ),
               ),
               SizedBox(
@@ -70,7 +70,7 @@ class SignUpView extends StatelessWidget {
                   Text(
                     'Already have an account? ',
                     style: TextStyle(
-                      color: AppColors.mainText,
+                      color: mainText,
                       fontSize: screenWidth * 0.045, // Dynamic font size
                     ),
                   ),
@@ -81,7 +81,7 @@ class SignUpView extends StatelessWidget {
                     child: Text(
                       'Login',
                       style: TextStyle(
-                        color: AppColors.yellow,
+                        color: yellow,
                         fontSize: screenWidth * 0.045, // Dynamic font size
                       ),
                     ),

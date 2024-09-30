@@ -14,8 +14,8 @@ class ChadChat extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        'LoginView': (context) => const LoginView(),
-        'SignUpView': (context) => const SignUpView(),
+        LoginView.id: (context) => const LoginView(),
+        SignUpView.id: (context) => const SignUpView(),
       },
       initialRoute: 'LoginView',
     );
