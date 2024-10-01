@@ -17,7 +17,7 @@ class ChadChat extends StatelessWidget {
         LoginView.id: (context) => const LoginView(),
         SignUpView.id: (context) => const SignUpView(),
       },
-      initialRoute: 'LoginView',
+      initialRoute: LoginView.id,
     );
   }
 }

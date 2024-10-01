@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "682179914707",
+    "project_id": "chad-chat-19068",
+    "storage_bucket": "chad-chat-19068.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682179914707:android:d7cab4f5e3174225465d26",
+        "android_client_info": {
+          "package_name": "com.example.chat_chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtAZRppbgJYVcZ8Cud-VeqR0YtapEJVgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
