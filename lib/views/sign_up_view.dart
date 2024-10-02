@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:chad_chat/components/custom_button.dart';
 import 'package:chad_chat/components/custom_text_field.dart';
 import 'package:chad_chat/constants/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignUpView extends StatelessWidget {
@@ -10,7 +13,8 @@ class SignUpView extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
+    String? email;
+    String? password;
     return Scaffold(
       backgroundColor: mainColor,
       body: SingleChildScrollView(
@@ -48,19 +52,51 @@ class SignUpView extends StatelessWidget {
               SizedBox(
                   height: screenHeight *
                       0.05), // Space between title and email field
-              const CustomTextField(label: 'Enter Your Email'),
+              CustomTextField(
+                label: 'Enter Your Email',
+                onChanged: (data) {
+                  email = data;
+                },
+              ),
               SizedBox(
                   height:
                       screenHeight * 0.03), // Space between email and password
-              const CustomTextField(label: 'Enter Your Password'),
+              CustomTextField(
+                label: 'Enter Your Password',
+                onChanged: (data) {
+                  password = data;
+                },
+              ),
               SizedBox(
                   height:
                       screenHeight * 0.03), // Space between email and password
-              const CustomTextField(label: 'Confirm Your Password'),
+              const CustomTextField(
+                label: 'Confirm Your Password',
+              ),
 
               SizedBox(
                   height: screenHeight * 0.04), // Space before sign-in button
-              const CustomButton(label: 'Sign Up'),
+              CustomButton(
+                label: 'Sign Up',
+                onPressed: () async {
+                  try {
+                    final credential = await FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                      email: email!,
+                      password: password!,
+                    );
+                    log(credential.user?.email ?? 'Nothing');
+                  } on FirebaseAuthException catch (e) {
+                    if (e.code == 'weak-password') {
+                      log('The password provided is too weak.');
+                    } else if (e.code == 'email-already-in-use') {
+                      log('The account already exists for that email.');
+                    }
+                  } catch (e) {
+                    log(e.toString());
+                  }
+                },
+              ),
               SizedBox(
                   height: screenHeight *
                       0.03), // Space before the "Don't have an account?" text
