@@ -13,6 +13,7 @@ class SignUpView extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     String? email;
     String? password;
+    String? passwordConfirm;
     return Scaffold(
       backgroundColor: mainColor,
       body: SingleChildScrollView(
@@ -68,60 +69,68 @@ class SignUpView extends StatelessWidget {
               SizedBox(
                   height:
                       screenHeight * 0.03), // Space between email and password
-              const CustomTextField(
+              CustomTextField(
                 label: 'Confirm Your Password',
+                onChanged: (data) {
+                  passwordConfirm = data;
+                },
               ),
 
               SizedBox(
                   height: screenHeight * 0.04), // Space before sign-in button
               CustomButton(
                 label: 'Sign Up',
-                onPressed: () async {
-                  try {
-                    if (validatePassword(password) != null) {
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(validatePassword(password)!),
-                        ),
-                      );
-                    }
-                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                      email: email!,
-                      password: password!,
-                    );
-                  } on FirebaseAuthException catch (e) {
-                    if (e.code == 'weak-password') {
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Weak Password, try stronger one'),
-                        ),
-                      );
-                    } else if (e.code == 'email-already-in-use') {
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Email is already used'),
-                        ),
-                      );
-                    }
-                  } on TypeError catch (_) {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Email or password is missing!'),
-                      ),
-                    );
-                  } catch (e) {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(e.toString()),
-                      ),
-                    );
-                  }
-                },
+                onPressed: password != passwordConfirm
+                    ? null
+                    : () async {
+                        try {
+                          if (validatePassword(password) != null) {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(validatePassword(password)!),
+                              ),
+                            );
+                          }
+                          await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                            email: email!,
+                            password: password!,
+                          );
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'weak-password') {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text('Weak Password, try stronger one'),
+                              ),
+                            );
+                          } else if (e.code == 'email-already-in-use') {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Email is already used'),
+                              ),
+                            );
+                          }
+                          Navigator.of(context).pop();
+                        } on TypeError catch (_) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Email or password is missing!'),
+                            ),
+                          );
+                        } catch (e) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(e.toString()),
+                            ),
+                          );
+                        }
+                      },
               ),
               SizedBox(
                   height: screenHeight *

@@ -23,7 +23,7 @@ class CustomButton extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            color: subColor,
+            color: yellow,
             fontSize: screenWidth * 0.05, // Dynamic font size
           ),
         ),
