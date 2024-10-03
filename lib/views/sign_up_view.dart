@@ -84,13 +84,11 @@ class SignUpView extends StatelessWidget {
                     ? null
                     : () async {
                         try {
-                          if (validatePassword(password) != null) {
+                          String? validationMessage =
+                              validatePassword(password);
+                          if (validationMessage != null) {
                             if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(validatePassword(password)!),
-                              ),
-                            );
+                            customSnackBar(context, validationMessage);
                           }
                           await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
@@ -100,35 +98,19 @@ class SignUpView extends StatelessWidget {
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'weak-password') {
                             if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                    Text('Weak Password, try stronger one'),
-                              ),
-                            );
+                            customSnackBar(
+                                context, 'Weak Password, try stronger one');
                           } else if (e.code == 'email-already-in-use') {
                             if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Email is already used'),
-                              ),
-                            );
+                            customSnackBar(context, 'Email is already used');
                           }
-                          Navigator.of(context).pop();
                         } on TypeError catch (_) {
                           if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Email or password is missing!'),
-                            ),
-                          );
+                          customSnackBar(
+                              context, 'Email or password is missing!');
                         } catch (e) {
                           if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(e.toString()),
-                            ),
-                          );
+                          customSnackBar(context, e.toString());
                         }
                       },
               ),
@@ -163,6 +145,14 @@ class SignUpView extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void customSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
       ),
     );
   }
