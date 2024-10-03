@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chad_chat/components/custom_button.dart';
 import 'package:chad_chat/components/custom_text_field.dart';
 import 'package:chad_chat/constants/colors.dart';
@@ -80,20 +78,48 @@ class SignUpView extends StatelessWidget {
                 label: 'Sign Up',
                 onPressed: () async {
                   try {
-                    final credential = await FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
+                    if (validatePassword(password) != null) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(validatePassword(password)!),
+                        ),
+                      );
+                    }
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
                       email: email!,
                       password: password!,
                     );
-                    log(credential.user?.email ?? 'Nothing');
                   } on FirebaseAuthException catch (e) {
                     if (e.code == 'weak-password') {
-                      log('The password provided is too weak.');
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Weak Password, try stronger one'),
+                        ),
+                      );
                     } else if (e.code == 'email-already-in-use') {
-                      log('The account already exists for that email.');
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Email is already used'),
+                        ),
+                      );
                     }
+                  } on TypeError catch (_) {
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Email or password is missing!'),
+                      ),
+                    );
                   } catch (e) {
-                    log(e.toString());
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(e.toString()),
+                      ),
+                    );
                   }
                 },
               ),
@@ -130,5 +156,22 @@ class SignUpView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    } else if (value.length < 8) {
+      return 'Password must be at least 8 characters';
+    } else if (!RegExp(r'[A-Z]').hasMatch(value)) {
+      return 'Password must contain at least one uppercase letter';
+    } else if (!RegExp(r'[a-z]').hasMatch(value)) {
+      return 'Password must contain at least one lowercase letter';
+    } else if (!RegExp(r'[0-9]').hasMatch(value)) {
+      return 'Password must contain at least one number';
+    } else if (!RegExp(r'[!@#\$&*~.,;:%^]').hasMatch(value)) {
+      return 'Password must contain at least one special character';
+    }
+    return null;
   }
 }
