@@ -1,19 +1,29 @@
+import 'dart:developer';
+
 import 'package:chad_chat/components/custom_button.dart';
 import 'package:chad_chat/components/custom_text_field.dart';
 import 'package:chad_chat/constants/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SignUpView extends StatelessWidget {
+class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
   static String id = 'SignUpView';
+
+  @override
+  State<SignUpView> createState() => _SignUpViewState();
+}
+
+class _SignUpViewState extends State<SignUpView> {
+  String? email;
+  String? password;
+  String? passwordConfirm;
+  bool isSimilarPasswords = false;
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    String? email;
-    String? password;
-    String? passwordConfirm;
+
     return Scaffold(
       backgroundColor: mainColor,
       body: SingleChildScrollView(
@@ -64,6 +74,9 @@ class SignUpView extends StatelessWidget {
                 label: 'Enter Your Password',
                 onChanged: (data) {
                   password = data;
+                  isSimilarPasswords = (password == passwordConfirm);
+
+                  setState(() {});
                 },
               ),
               SizedBox(
@@ -73,6 +86,9 @@ class SignUpView extends StatelessWidget {
                 label: 'Confirm Your Password',
                 onChanged: (data) {
                   passwordConfirm = data;
+                  isSimilarPasswords = (passwordConfirm == password);
+
+                  setState(() {});
                 },
               ),
 
@@ -80,9 +96,10 @@ class SignUpView extends StatelessWidget {
                   height: screenHeight * 0.04), // Space before sign-in button
               CustomButton(
                 label: 'Sign Up',
-                onPressed: password != passwordConfirm
+                onPressed: !isSimilarPasswords
                     ? null
                     : () async {
+                        log("Passwords match: $isSimilarPasswords");
                         try {
                           String? validationMessage =
                               validatePassword(password);
@@ -95,6 +112,9 @@ class SignUpView extends StatelessWidget {
                             email: email!,
                             password: password!,
                           );
+                          //popping sign up view once succeding
+                          if (!context.mounted) return;
+                          Navigator.of(context).pop();
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'weak-password') {
                             if (!context.mounted) return;
