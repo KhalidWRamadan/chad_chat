@@ -21,7 +21,7 @@ class ChadChat extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         LoginView.id: (context) => const LoginView(),
-        SignUpView.id: (context) => const SignUpView(),
+        SignUpView.id: (context) => SignUpView(),
       },
       initialRoute: LoginView.id,
     );

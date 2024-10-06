@@ -1,26 +1,24 @@
-import 'dart:developer';
-
 import 'package:chad_chat/components/custom_button.dart';
 import 'package:chad_chat/components/custom_text_field.dart';
 import 'package:chad_chat/constants/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SignUpView extends StatefulWidget {
-  const SignUpView({super.key});
-  static String id = 'SignUpView';
+class SignUpView extends StatelessWidget {
+  SignUpView({super.key});
 
-  @override
-  State<SignUpView> createState() => _SignUpViewState();
-}
+  static const String id = 'SignUpView';
 
-class _SignUpViewState extends State<SignUpView> {
-  String? email;
-  String? password;
-  String? passwordConfirm;
-  bool isSimilarPasswords = false;
+  //initializing a global key to act like a state flag gor checking values
+  final GlobalKey<FormState> formKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    String? email;
+
+    String? password;
+
+    String? passwordConfirm;
+
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -32,74 +30,99 @@ class _SignUpViewState extends State<SignUpView> {
             horizontal: screenWidth * 0.08, // Dynamic horizontal padding
             vertical: screenHeight * 0.05, // Dynamic vertical padding
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: screenHeight * 0.05), // Top spacing
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  'assets/giga.jpg',
-                  width:
-                      screenWidth * 0.25, // Dynamic width (25% of screen width)
-                  height: screenHeight * 0.15, // Dynamic height
-                  fit: BoxFit.fill,
+          child: Form(
+            //passing the key for the form to give access to all the child widgets
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: screenHeight * 0.05), // Top spacing
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    'assets/giga.jpg',
+                    width: screenWidth *
+                        0.25, // Dynamic width (25% of screen width)
+                    height: screenHeight * 0.15, // Dynamic height
+                    fit: BoxFit.fill,
+                  ),
                 ),
-              ),
-              SizedBox(
-                  height: screenHeight * 0.05), // Space between image and text
-              Text(
-                'Chad Chat',
-                style: TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontStyle: FontStyle.italic,
-                  fontSize:
-                      screenWidth * 0.08, // Font size relative to screen width
-                  color: mainText,
+                SizedBox(
+                    height:
+                        screenHeight * 0.05), // Space between image and text
+                Text(
+                  'Chad Chat',
+                  style: TextStyle(
+                    fontFamily: 'PlayfairDisplay',
+                    fontStyle: FontStyle.italic,
+                    fontSize: screenWidth *
+                        0.08, // Font size relative to screen width
+                    color: mainText,
+                  ),
                 ),
-              ),
-              SizedBox(
-                  height: screenHeight *
-                      0.05), // Space between title and email field
-              CustomTextField(
-                label: 'Enter Your Email',
-                onChanged: (data) {
-                  email = data;
-                },
-              ),
-              SizedBox(
-                  height:
-                      screenHeight * 0.03), // Space between email and password
-              CustomTextField(
-                label: 'Enter Your Password',
-                onChanged: (data) {
-                  password = data;
-                  isSimilarPasswords = (password == passwordConfirm);
+                SizedBox(
+                    height: screenHeight *
+                        0.05), // Space between title and email field
+                CustomTextField(
+                  label: 'Enter Your Email',
+                  validator: (data) {
+                    //check the entered text value and returning error messages
+                    if (data!.isEmpty) {
+                      return 'This Field is Required';
+                    }
+                    return null;
+                  },
+                  onChanged: (data) {
+                    email = data;
+                  },
+                ),
+                SizedBox(
+                    height: screenHeight *
+                        0.03), // Space between email and password
+                CustomTextField(
+                  label: 'Enter Your Password',
+                  validator: (data) {
+                    //check the entered text value and returning error messages
+                    if (data!.isEmpty) {
+                      return 'This Field is Required';
+                    } else if (data != passwordConfirm) {
+                      return 'Password is not Confirmed properly';
+                    } else if (validatePassword(data) != null) {
+                      return validatePassword(data);
+                    }
+                    return null;
+                  },
+                  onChanged: (data) {
+                    password = data;
+                  },
+                ),
+                SizedBox(
+                    height: screenHeight *
+                        0.03), // Space between email and password
+                CustomTextField(
+                  validator: (data) {
+                    //check the entered text value and returning error messages
+                    if (data!.isEmpty) {
+                      return 'This Field is Required';
+                    } else if (data != password) {
+                      return 'Password is not Confirmed properly';
+                    }
+                    return null;
+                  },
+                  label: 'Confirm Your Password',
+                  onChanged: (data) {
+                    passwordConfirm = data;
+                  },
+                ),
 
-                  setState(() {});
-                },
-              ),
-              SizedBox(
-                  height:
-                      screenHeight * 0.03), // Space between email and password
-              CustomTextField(
-                label: 'Confirm Your Password',
-                onChanged: (data) {
-                  passwordConfirm = data;
-                  isSimilarPasswords = (passwordConfirm == password);
-
-                  setState(() {});
-                },
-              ),
-
-              SizedBox(
-                  height: screenHeight * 0.04), // Space before sign-in button
-              CustomButton(
-                label: 'Sign Up',
-                onPressed: !isSimilarPasswords
-                    ? null
-                    : () async {
-                        log("Passwords match: $isSimilarPasswords");
+                SizedBox(
+                    height: screenHeight * 0.04), // Space before sign-in button
+                CustomButton(
+                    label: 'Sign Up',
+                    onPressed: () async {
+                      //check the current state of the textForm
+                      //if it is valid continue the sign up process
+                      if (formKey.currentState!.validate()) {
                         try {
                           String? validationMessage =
                               validatePassword(password);
@@ -132,37 +155,38 @@ class _SignUpViewState extends State<SignUpView> {
                           if (!context.mounted) return;
                           customSnackBar(context, e.toString());
                         }
-                      },
-              ),
-              SizedBox(
-                  height: screenHeight *
-                      0.03), // Space before the "Don't have an account?" text
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Already have an account? ',
-                    style: TextStyle(
-                      color: mainText,
-                      fontSize: screenWidth * 0.045, // Dynamic font size
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'Login',
+                      }
+                    }),
+                SizedBox(
+                    height: screenHeight *
+                        0.03), // Space before the "Don't have an account?" text
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Already have an account? ',
                       style: TextStyle(
-                        color: yellow,
+                        color: mainText,
                         fontSize: screenWidth * 0.045, // Dynamic font size
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: screenHeight * 0.08), // Bottom padding
-            ],
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                          color: yellow,
+                          fontSize: screenWidth * 0.045, // Dynamic font size
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: screenHeight * 0.08), // Bottom padding
+              ],
+            ),
           ),
         ),
       ),
