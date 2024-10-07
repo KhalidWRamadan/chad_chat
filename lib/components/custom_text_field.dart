@@ -1,5 +1,6 @@
-import 'package:chad_chat/constants/colors.dart';
 import 'package:flutter/material.dart';
+
+import 'package:chad_chat/constants/colors.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField(

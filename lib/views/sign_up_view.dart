@@ -1,4 +1,5 @@
 import 'package:chad_chat/components/custom_button.dart';
+import 'package:chad_chat/components/custom_snack_bar.dart';
 import 'package:chad_chat/components/custom_text_field.dart';
 import 'package:chad_chat/constants/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -212,14 +213,6 @@ class _SignUpViewState extends State<SignUpView> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  void customSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
       ),
     );
   }

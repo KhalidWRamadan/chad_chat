@@ -1,4 +1,5 @@
 import 'package:chad_chat/firebase_options.dart';
+import 'package:chad_chat/views/home_view.dart';
 import 'package:chad_chat/views/login_view.dart';
 import 'package:chad_chat/views/sign_up_view.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,7 +22,8 @@ class ChadChat extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         LoginView.id: (context) => const LoginView(),
-        SignUpView.id: (context) => SignUpView(),
+        SignUpView.id: (context) => const SignUpView(),
+        HomeView.id: (context) => const HomeView(),
       },
       initialRoute: LoginView.id,
     );
