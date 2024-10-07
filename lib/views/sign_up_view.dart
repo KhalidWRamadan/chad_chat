@@ -146,6 +146,13 @@ class SignUpView extends StatelessWidget {
                           } else if (e.code == 'email-already-in-use') {
                             if (!context.mounted) return;
                             customSnackBar(context, 'Email is already used');
+                          } else if (e.code == 'invalid-email') {
+                            if (!context.mounted) return;
+                            customSnackBar(context, 'Invalid Email format');
+                          } else if (e.code == 'network-request-failed') {
+                            if (!context.mounted) return;
+                            customSnackBar(context,
+                                'Connection Error, check your internet and try again');
                           }
                         } on TypeError catch (_) {
                           if (!context.mounted) return;
