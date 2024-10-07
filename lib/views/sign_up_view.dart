@@ -4,21 +4,28 @@ import 'package:chad_chat/constants/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SignUpView extends StatelessWidget {
-  SignUpView({super.key});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key});
 
   static const String id = 'SignUpView';
 
+  @override
+  State<SignUpView> createState() => _SignUpViewState();
+}
+
+class _SignUpViewState extends State<SignUpView> {
   //initializing a global key to act like a state flag gor checking values
   final GlobalKey<FormState> formKey = GlobalKey();
+  String? email;
+
+  String? password;
+
+  String? passwordConfirm;
+
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
-    String? email;
-
-    String? password;
-
-    String? passwordConfirm;
-
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -36,6 +43,8 @@ class SignUpView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                if (isLoading) const LinearProgressIndicator(),
+
                 SizedBox(height: screenHeight * 0.05), // Top spacing
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
@@ -120,6 +129,9 @@ class SignUpView extends StatelessWidget {
                 CustomButton(
                     label: 'Sign Up',
                     onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
                       //check the current state of the textForm
                       //if it is valid continue the sign up process
                       if (formKey.currentState!.validate()) {
@@ -163,6 +175,10 @@ class SignUpView extends StatelessWidget {
                           customSnackBar(context, e.toString());
                         }
                       }
+
+                      setState(() {
+                        isLoading = false;
+                      });
                     }),
                 SizedBox(
                     height: screenHeight *
