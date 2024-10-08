@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chad_chat/components/custom_button.dart';
 import 'package:chad_chat/components/custom_snack_bar.dart';
 import 'package:chad_chat/components/custom_text_Field.dart';
@@ -111,8 +109,17 @@ class _LoginViewState extends State<LoginView> {
                           customSnackBar(
                               context, 'No user found for that email.');
                         } else if (e.code == 'wrong-password') {
+                          customSnackBar(context, 'Wrong password provided');
+                        } else if (e.code == 'invalid-email') {
+                          customSnackBar(
+                              context, 'The email address is badly formatted.');
+                        } else if (e.code == 'invalid-credential' ||
+                            e.code == 'expired-action-code') {
+                          customSnackBar(
+                              context, 'Wrong Email and/or Password');
+                        } else {
                           customSnackBar(context,
-                              'Wrong password provided for that user.');
+                              'An unexpected error occurred: ${e.message}');
                         }
                       } catch (e) {
                         if (!context.mounted) return;
